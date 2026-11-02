@@ -31,7 +31,23 @@
   .leyenda em{width:12px;height:12px;border-radius:4px;align-self:center}
   .leyenda b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
   .txt{font-size:14px;color:var(--ink2);margin:14px 0 0}
-  .btn{display:inline-block;margin-top:14px;background:var(--btn);color:var(--btn-ink);border-radius:10px;padding:10px 18px;font-weight:600;font-size:15px;text-decoration:none}
+  .btn{display:block;width:100%;margin-top:14px;background:var(--btn);color:var(--btn-ink);border:0;border-radius:12px;padding:14px 18px;font:600 16px system-ui,sans-serif;cursor:pointer}
+  .btn:disabled{opacity:.45;cursor:default}
+  .paso{font-size:14px;font-weight:600;margin:20px 0 8px}
+  .monto{display:flex;align-items:center;gap:6px;background:var(--page);border:1px solid var(--line);border-radius:12px;padding:0 14px}
+  .monto span{font-size:20px;font-weight:600;color:var(--muted)}
+  .monto input{flex:1;min-width:0;border:0;background:none;color:var(--ink);font:600 22px system-ui,sans-serif;padding:12px 0;outline:0}
+  .monto:focus-within{border-color:var(--accent)}
+  .chips{display:flex;gap:8px;margin-top:8px}
+  .chips button{flex:1;background:none;border:1px solid var(--line);border-radius:10px;color:var(--ink);font:600 15px system-ui,sans-serif;padding:10px 0;cursor:pointer}
+  .chips button.on{border-color:var(--accent);color:var(--accent-ink)}
+  .dato{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+  .dato:first-of-type{border-top:0}
+  .dato small{display:block;font-size:12px;color:var(--muted)}
+  .dato b{display:block;font-size:16px;font-weight:600;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+  .dato button{flex:none;min-width:88px;background:none;border:1px solid var(--line);border-radius:10px;color:var(--accent-ink);font:600 14px system-ui,sans-serif;padding:10px 12px;cursor:pointer}
+  .dato button.ok{color:var(--ink);border-color:var(--accent)}
+  .gracias{margin-top:14px;font-weight:600}
   .pronto{margin-top:12px;font-size:14px;color:var(--muted)}
   #tip{position:fixed;z-index:9;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.18);pointer-events:none}
   #tip[hidden]{display:none}
@@ -82,13 +98,70 @@
   $('barra').innerHTML = D.guias.map((g, i) => `<div class="seg" data-t="${esc(g.nombre)}: ${$$(g.costo)} MXN" style="flex:${g.costo} 1 0;background:${COLORS[i % COLORS.length]}"></div>`).join('');
   $('leyenda').innerHTML = D.guias.map((g, i) => `<li><em style="background:${COLORS[i % COLORS.length]}"></em><span>${esc(g.nombre)}</span><b>${$$(g.costo)}</b></li>`).join('');
 
-  const rec = D.donaciones.recaudado, pct = Math.min(100, rec / total * 100);
-  $('rec').textContent = $$(rec);
+  const d = D.donaciones, pb = $('pb');
+  let reunido = d.recaudado;
+  const pintar = () => {
+    $('rec').textContent = $$(reunido);
+    $('prog').style.width = Math.min(100, reunido / total * 100) + '%';
+    pb.setAttribute('aria-valuenow', Math.min(reunido, total)); pb.setAttribute('aria-valuetext', `${$$(reunido)} de ${$$(total)} MXN`);
+  };
   $('meta').textContent = `de ${$$(total)} MXN`;
-  $('prog').style.width = pct + '%';
-  const pb = $('pb'); pb.setAttribute('aria-valuemax', total); pb.setAttribute('aria-valuenow', rec); pb.setAttribute('aria-valuetext', `${$$(rec)} de ${$$(total)} MXN`);
-  const link = D.donaciones.link;
-  $('don').innerHTML = /^https:\/\//.test(link) ? `<a class="btn" href="${esc(link)}" target="_blank" rel="noopener noreferrer">Donar</a>` : '<p class="pronto">Muy pronto podrás donar desde aquí.</p>';
+  pb.setAttribute('aria-valuemax', total);
+  pintar();
+  const leerTotal = () => {
+    if (!d.registroUrl) return;
+    fetch(d.registroUrl).then((r) => r.json()).then((j) => { if (Number.isFinite(j.total)) { reunido = d.recaudado + j.total; pintar(); } }).catch(() => {});
+  };
+  leerTotal();
+
+  const clabe = String(d.clabe || '').replace(/\D/g, '');
+  if (clabe.length !== 18) {
+    $('don').innerHTML = '<p class="pronto">Muy pronto podrás donar desde aquí.</p>';
+  } else {
+    const dato = (id, etiqueta, valor) => `<div class="dato"><div><small>${etiqueta}</small><b id="${id}">${esc(valor)}</b></div><button type="button" data-c="${id}" aria-label="Copiar ${etiqueta}">Copiar</button></div>`;
+    $('don').innerHTML = `
+      <p class="paso"><label for="monto">1. ¿Cuánto vas a donar?</label></p>
+      <div class="monto"><span>$</span><input id="monto" type="number" inputmode="numeric" min="1" step="1" placeholder="0" autocomplete="off" aria-label="Monto en pesos"></div>
+      <div class="chips" id="chips">${[100, 200, 500].map((v) => `<button type="button" data-v="${v}">${$$(v)}</button>`).join('')}</div>
+      <p class="paso">2. Copia cada dato en la app de tu banco</p>
+      ${dato('d-clabe', 'CLABE', clabe)}${dato('d-monto', 'Monto', '—')}${dato('d-banco', 'Banco', d.banco)}${dato('d-nombre', 'Beneficiario', d.beneficiario)}${dato('d-concepto', 'Concepto', d.concepto)}
+      <p class="paso">3. Cuando la hayas hecho, avísame aquí</p>
+      <button class="btn" id="listo" type="button" disabled>Ya hice mi transferencia</button>
+      <div id="fin" aria-live="polite"></div>`;
+    const inp = $('monto'), listo = $('listo');
+    const montoValido = () => { const v = Math.floor(Number(inp.value)); return v > 0 ? v : 0; };
+    const alCambiar = () => {
+      const v = montoValido();
+      $('d-monto').textContent = v ? String(v) : '—';
+      listo.disabled = !v;
+      document.querySelectorAll('#chips button').forEach((b) => b.classList.toggle('on', +b.dataset.v === v));
+    };
+    inp.addEventListener('input', alCambiar);
+    $('chips').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { inp.value = b.dataset.v; alCambiar(); } });
+    const copiar = async (texto) => {
+      try { await navigator.clipboard.writeText(texto); return true; } catch (err) {}
+      const t = document.createElement('textarea'); t.value = texto; t.style.cssText = 'position:fixed;opacity:0'; document.body.append(t); t.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (err) {}
+      t.remove(); return ok;
+    };
+    $('don').addEventListener('click', async (e) => {
+      const b = e.target.closest('button[data-c]'); if (!b) return;
+      const texto = $(b.dataset.c).textContent;
+      if (texto === '—') { inp.focus(); return; }
+      const ok = await copiar(texto);
+      document.querySelectorAll('button[data-c]').forEach((x) => { x.textContent = 'Copiar'; x.classList.remove('ok'); });
+      b.textContent = ok ? 'Copiado ✓' : 'Mantén presionado'; b.classList.toggle('ok', ok);
+    });
+    listo.addEventListener('click', () => {
+      const v = montoValido(); if (!v) return;
+      listo.disabled = true; inp.disabled = true;
+      reunido += v; pintar();
+      if (d.registroUrl) {
+        fetch(d.registroUrl, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ monto: v }) }).then(() => setTimeout(leerTotal, 1500)).catch(() => {});
+      }
+      $('fin').innerHTML = '<p class="gracias">¡Muchas gracias por tu apoyo!</p>';
+    });
+  }
 
   const tip = $('tip');
   document.querySelectorAll('.seg').forEach((s) => {

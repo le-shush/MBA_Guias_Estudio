@@ -3,8 +3,12 @@ window.MBA = {
   // Estimado para cada guía nueva: $3,375 de las dos primeras ÷ 2. Úsalo como `costo` al agregar una guía.
   costoEstimadoPorGuia: 1687.5,
   donaciones: {
-    recaudado: 0,   // MXN recibidos hasta ahora
-    link: '',       // liga de pago; mientras esté vacía no se muestra el botón
+    recaudado: 0,   // MXN recibidos por otras vías; se suma a lo registrado en la hoja de Google
+    clabe: '',      // 18 dígitos; mientras esté vacía no se muestran los datos de depósito
+    banco: 'Nu México',
+    beneficiario: 'Jesus Mondragon Ortiz',
+    concepto: 'GUIAS',
+    registroUrl: '', // URL de la app web de Google Apps Script que lleva el total
   },
   guias: [
     {

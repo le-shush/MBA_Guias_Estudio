@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Guías de estudio · MBA</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Guías de estudio interactivas del MBA.">
+<style>
+  :root{color-scheme:light;--page:#f6f6f3;--card:#fff;--ink:#0b0b0b;--ink2:#52514e;--muted:#6f6e69;--line:#e1e0d9;--track:#ecebe6;--accent:#2a78d6;--accent-ink:#1c5cab;--c1:#2a78d6;--c2:#eb6834;--btn:#1f1f1e;--btn-ink:#fff;--shadow:0 1px 2px rgba(11,11,11,.05)}
+  @media (prefers-color-scheme:dark){:root{color-scheme:dark;--page:#0f0f0e;--card:#1a1a19;--ink:#f6f5f1;--ink2:#c3c2b7;--muted:#9a9890;--line:#2f2f2c;--track:#2c2c2a;--accent:#3987e5;--accent-ink:#86b6ef;--c1:#3987e5;--c2:#d95926;--btn:#f3f2ee;--btn-ink:#141414;--shadow:0 1px 2px rgba(0,0,0,.4)}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+  main{max-width:760px;margin:0 auto;padding:48px 16px 64px}
+  h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;margin:0 0 6px}
+  .lead{color:var(--ink2);margin:0 0 32px}
+  h2{font-size:17px;margin:0 0 12px}
+  section{margin-top:32px}
+  .guia{display:flex;gap:16px;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:10px;text-decoration:none;color:inherit;box-shadow:var(--shadow);transition:border-color .15s}
+  .guia:hover,.guia:focus-visible{border-color:var(--accent)}
+  .guia b{display:block;font-size:17px;line-height:1.3}
+  .guia span{display:block;font-size:14px;color:var(--ink2);margin-top:3px}
+  .guia i{font-style:normal;flex:none;color:var(--accent-ink);font-weight:600;font-size:14px;white-space:nowrap}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+  .total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .total b{font-size:24px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .total span{font-size:14px;color:var(--muted)}
+  .barra{display:flex;gap:2px;height:14px;border-radius:7px;overflow:hidden;background:var(--track)}
+  .seg{height:100%;min-width:2px;cursor:default}
+  .prog{height:100%;background:var(--accent);border-radius:7px;min-width:0;transition:width .4s}
+  .leyenda{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:6px}
+  .leyenda li{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:8px;align-items:baseline;font-size:14px;color:var(--ink2)}
+  .leyenda em{width:12px;height:12px;border-radius:4px;align-self:center}
+  .leyenda b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+  .txt{font-size:14px;color:var(--ink2);margin:14px 0 0}
+  .btn{display:inline-block;margin-top:14px;background:var(--btn);color:var(--btn-ink);border-radius:10px;padding:10px 18px;font-weight:600;font-size:15px;text-decoration:none}
+  .pronto{margin-top:12px;font-size:14px;color:var(--muted)}
+  #tip{position:fixed;z-index:9;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.18);pointer-events:none}
+  #tip[hidden]{display:none}
+  @media(max-width:560px){main{padding-top:32px}.guia{align-items:flex-start;flex-direction:column;gap:8px}}
+  @media(forced-colors:active){.seg,.prog,.leyenda em{forced-color-adjust:none}}
+</style>
+</head><body>
+<main>
+  <h1>Guías de estudio del MBA</h1>
+  <p class="lead">Guías interactivas para repasar cada materia.</p>
+
+  <section aria-labelledby="h-guias"><h2 id="h-guias">Guías</h2><div id="guias"></div></section>
+
+  <section aria-labelledby="h-costos"><h2 id="h-costos">Costo de cada guía</h2>
+    <div class="panel">
+      <div class="total"><b id="total"></b><span>MXN en total, estimado</span></div>
+      <div class="barra" id="barra" role="img"></div>
+      <ul class="leyenda" id="leyenda"></ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-don"><h2 id="h-don">Apoya estas guías</h2>
+    <div class="panel">
+      <div class="total"><b id="rec"></b><span id="meta"></span></div>
+      <div class="barra" id="pb" role="progressbar" aria-valuemin="0" aria-labelledby="h-don"><div class="prog" id="prog"></div></div>
+      <p class="txt">Este monto es el costo estimado de desarrollar y probar estas guías de estudio. Cubre suscripciones, transcripciones de audio y el desarrollo y prueba de la plataforma.</p>
+      <p class="txt">La contribución es voluntaria, pero les agradecería enormemente si pudieran donar para ayudar a cubrir estos costos. Si se supera el monto, el excedente se destina a las siguientes guías del MBA.</p>
+      <div id="don"></div>
+    </div>
+  </section>
+</main>
+<div id="tip" hidden></div>
+<script src="guias.js"></script>
+<script>
+(function () {
+  'use strict';
+  const D = window.MBA, $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const $$ = (v) => '$' + new Intl.NumberFormat('es-MX', { maximumFractionDigits: 0 }).format(v);
+  const COLORS = ['var(--c1)', 'var(--c2)'];
+  const total = D.guias.reduce((s, g) => s + g.costo, 0);
+
+  $('guias').innerHTML = D.guias.map((g) => `<a class="guia" href="${esc(g.url)}"><div><b>${esc(g.nombre)}</b><span>${esc(g.desc)}</span></div><i>Abrir →</i></a>`).join('');
+
+  $('total').textContent = $$(total);
+  $('barra').setAttribute('aria-label', D.guias.map((g) => `${g.nombre}: ${$$(g.costo)} MXN`).join('; '));
+  $('barra').innerHTML = D.guias.map((g, i) => `<div class="seg" data-t="${esc(g.nombre)}: ${$$(g.costo)} MXN" style="flex:${g.costo} 1 0;background:${COLORS[i % COLORS.length]}"></div>`).join('');
+  $('leyenda').innerHTML = D.guias.map((g, i) => `<li><em style="background:${COLORS[i % COLORS.length]}"></em><span>${esc(g.nombre)}</span><b>${$$(g.costo)}</b></li>`).join('');
+
+  const rec = D.donaciones.recaudado, pct = Math.min(100, rec / total * 100);
+  $('rec').textContent = $$(rec);
+  $('meta').textContent = `de ${$$(total)} MXN`;
+  $('prog').style.width = pct + '%';
+  const pb = $('pb'); pb.setAttribute('aria-valuemax', total); pb.setAttribute('aria-valuenow', rec); pb.setAttribute('aria-valuetext', `${$$(rec)} de ${$$(total)} MXN`);
+  const link = D.donaciones.link;
+  $('don').innerHTML = /^https:\/\//.test(link) ? `<a class="btn" href="${esc(link)}" target="_blank" rel="noopener noreferrer">Donar</a>` : '<p class="pronto">Muy pronto podrás donar desde aquí.</p>';
+
+  const tip = $('tip');
+  document.querySelectorAll('.seg').forEach((s) => {
+    s.addEventListener('mousemove', (e) => { tip.textContent = s.dataset.t; tip.hidden = false; tip.style.left = Math.min(innerWidth - tip.offsetWidth - 8, e.clientX + 12) + 'px'; tip.style.top = e.clientY - tip.offsetHeight - 10 + 'px'; });
+    s.addEventListener('mouseleave', () => { tip.hidden = true; });
+  });
+})();
+</script>
+</body></html>

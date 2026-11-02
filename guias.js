@@ -4,7 +4,7 @@ window.MBA = {
   costoEstimadoPorGuia: 1687.5,
   donaciones: {
     recaudado: 0,   // MXN recibidos por otras vías; se suma a lo registrado en la hoja de Google
-    clabe: '',      // 18 dígitos; mientras esté vacía no se muestran los datos de depósito
+    clabe: '638180000178094751',      // 18 dígitos; mientras esté vacía no se muestran los datos de depósito
     banco: 'Nu México',
     beneficiario: 'Jesus Mondragon Ortiz',
     concepto: 'GUIAS',

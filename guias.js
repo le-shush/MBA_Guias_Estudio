@@ -8,7 +8,7 @@ window.MBA = {
     banco: 'Nu México',
     beneficiario: 'Jesus Mondragon Ortiz',
     concepto: 'GUIAS',
-    registroUrl: '', // URL de la app web de Google Apps Script que lleva el total
+    registroUrl: 'https://script.google.com/macros/s/AKfycbyYbRxHwBpdUki0pzsktjG31v4yaCUWbWC0Lw1-g2pvDC1jLP3QkAbZ8b9VHgDLrppD/exec', // URL de la app web de Google Apps Script que lleva el total
   },
   guias: [
     {

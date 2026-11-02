@@ -9,9 +9,9 @@ window.MBA = {
   guias: [
     {
       nombre: 'Análisis Financiero',
-      desc: 'Razones financieras, DuPont, fuentes y usos, flujo de efectivo y práctica tipo examen.',
+      desc: 'Razones financieras, DuPont, fuentes y usos, flujo de efectivo y práctica tipo examen. Incluye el Detective Financiero.',
       url: 'https://le-shush.github.io/DetectiveFinanciero_Dataviz/estudio.html',
-      costo: 1290,
+      costo: 1930,
     },
     {
       nombre: 'Perspectivas Económicas Internacionales',
